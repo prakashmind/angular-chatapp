@@ -1,0 +1,101 @@
+<div class="container">
+    <h3 class=" text-center">MidPoint</h3>
+    <div class="messaging">
+            <div class="inbox_msg">
+              <div class="inbox_people">
+                <div class="headind_srch">
+                  <div class="recent_heading">
+                    <h4>{{myName}}</h4>
+                  </div>
+                  <div class="srch_bar">
+                    <div class="stylish-input-group">
+                      <input type="text" class="search-bar"  placeholder="Search" >
+                      <span class="input-group-addon">
+                      <button type="button"> <i class="fa fa-search" aria-hidden="true"></i> </button>
+                      </span> </div>
+                  </div>
+                </div>
+                <div class="inbox_chat">
+                  <ng-container *ngFor="let user of users">
+                    <div class="chat_list" *ngIf='user._id!=myId' (click)="selectedUser(user)" [ngClass]="(selectedUserId==user._id)?'changeBgColor':'my-class2'">
+                      <div class="chat_people">
+                        <div class="chat_img">
+                           <!-- <img src="{{user.image}}" alt="img" class="profilepic"> -->
+                           <div class="d-flex justify-content-center h-100">
+                            <div class="image_outer_container">
+                              <div class="green_icon" *ngIf="activeUsers.includes(user._id)"></div>
+                              <div class="image_inner_container">
+                                <img  src="{{user.image}}">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="chat_ib">
+                          <h5>{{user.name}} 
+                            <!-- <span class="chat_date" >online</span> -->
+                          </h5>
+                          <!-- <p *ngIf="selectedUserId === user._id">
+                            {{lastMsg}}
+                          </p> -->
+                          <ng-container *ngFor='let message of allMessages'>
+                            <p *ngIf="message.sender===user._id && message.receiver===myId ||
+                             message.receiver===user._id && message.sender===myId">
+                              {{message.message}}
+                            </p>
+                          </ng-container>
+                        </div>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            <div class="mesgs">
+              <div class="msg_history" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+                <div *ngIf="error" class="alert alert-danger" role="alert">
+                  Please select user from list and then start chatting!!
+                </div>
+                <div *ngIf="!selectedUserId && !error" class="alert alert-primary" role="alert">
+                  Please select user from list and then start chatting!!
+                </div>
+                <div *ngIf="emptyMsgErr" class="alert alert-info" role="alert">
+                  Message should not be empty
+                </div>
+                <div *ngIf='firstMsg' class="alert alert-light" role="alert">
+                  Send your first message to {{selectedUserName}}....
+                </div>
+                <ng-container *ngFor="let message of chattings">
+                  <div *ngIf="message.receiver!=myId" class="outgoing_msg">
+                    <div class="sent_msg">
+                       <p>{{message.message}}</p>
+                       <span class="time_date"> {{message.date | dateAgo}}</span>
+                     </div>
+                  </div>
+                  <div *ngIf="message.receiver==myId" class="incoming_msg">
+                    <div class="incoming_msg_img"> <img src="{{message.image}}" style="object-fit: contain;
+                      border-radius: 18px;" alt="sunil"> </div>
+                    <div class="received_msg">
+                      <div class="received_withd_msg">
+                        <p>{{message.message}}</p>
+                        <span class="time_date"> {{message.date | dateAgo}}</span></div>
+                    </div>
+                  </div>
+                </ng-container>
+              </div>
+              <span class="typing-meta" *ngIf="friendtyping">{{selectedUserName}} is Typing</span>
+              <div class="typing" *ngIf="friendtyping">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div> 
+              <div class="type_msg">
+                <div class="input_msg_write">
+                  <input type="text" [(ngModel)]='msgTestBox' (keyup)="typing()" class="write_msg"  #msg (keyup.enter)="sendMsg(msg.value)" placeholder="Send message to {{selectedUserName}}" />
+                  <button class="msg_send_btn" name="msg" type="button" (click)="sendMsg(msg.value)">
+                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>                
+    </div>
+</div>
